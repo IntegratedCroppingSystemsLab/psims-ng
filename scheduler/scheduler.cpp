@@ -18,7 +18,7 @@ int main(int argc, char** argv)
 {
     int c, rank, nodes;
     bool running;
-    vector<pair<string, string>> sims; // (simname, simcmd)
+    vector<pair<string, string>> sims; // (simoutpath, simcmd)
 
     // Parse arguments
     while ((c = getopt(argc, argv, "h")) != -1)
@@ -195,6 +195,7 @@ int main(int argc, char** argv)
         }
     }
 
+    // Cleanup MPI
     if (MPI_Finalize() != MPI_SUCCESS)
         cerr << "warning: MPI_Finalize() failed" << endl;
 
