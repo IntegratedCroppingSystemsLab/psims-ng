@@ -3,9 +3,9 @@
 
 import sys
 
-if len(sys.argv) < 3:
-    print('usage: {} INPUT_DB OUTPUT_DB'.format(sys.argv[0]))
+if len(sys.argv) < 2:
+    print('usage: {} DATABASE'.format(sys.argv[0]))
     sys.exit(-1)
 
 import psimulator
-psimulator.run(sys.argv[1], sys.argv[2])
+psimulator.run(sys.argv[1])
