@@ -17,12 +17,12 @@ class Simulation:
             raise RuntimeError('simulation directory {} not found'.format(tld))
 
         # initialize metadata
-        mdpath = path.join(tld, 'metadata.json')
+        mdpath = path.join(tld, 'simulation.json')
 
         if not path.isfile(mdpath):
             raise RuntimeError('required metadata {} not found'.format(mdpath))
 
-        with open(path.join(tld, 'metadata.json'), 'r') as f:
+        with open(path.join(tld, 'simulation.json'), 'r') as f:
             self.metadata = json.loads(f.read())
 
         # verify required fields
@@ -33,7 +33,7 @@ class Simulation:
             raise RuntimeError('{}: missing required field "output"'.format(mdpath))
 
         self.command = self.metadata['command']
-        self.output = self.metadata['output']
+        self.output = self.metadata['output'].split(',')[:2]
 
         # verify output types
         for out in self.outputs():
