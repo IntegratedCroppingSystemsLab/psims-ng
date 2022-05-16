@@ -1,6 +1,7 @@
 import json
 import os
 from os import path
+import sqlite3
 
 from . import sim
 
@@ -29,9 +30,30 @@ class Collection:
 
         print('Found {} simulations'.format(len(self.sims)))
 
-    def schedule(self):
-        """Dispatches simulations to other MPI nodes until they have all been
-           executed."""
-
     def simulations(self):
         return self.sims
+
+    def merge(self):
+        db = sqlite3.connect('output.db')
+        first = True
+        c = db.cursor()
+
+        for sim in self.sims:
+            for out in sim.outputs():
+                db.execute('ATTACH DATABASE \"{}\" as inp'.format(path.join(sim.tld, out[0])))
+
+                c.execute('ALTER TABLE inp.Report ADD COLUMN geometry text')
+                c.execute('UPDATE inp.Report SET geometry=? WHERE 1=1', [sim.geometry,])
+
+                if first:
+                    c.execute('SELECT sql FROM inp.sqlite_master WHERE type="table" AND name="Report"')
+                    sql = c.fetchone()[0]
+                    c.execute(sql)
+                    first = False
+
+                db.execute('INSERT INTO Report SELECT * FROM inp.Report')
+                db.commit()
+                print('Merged {}'.format(sim.command))
+                db.execute('DETACH DATABASE inp')
+
+

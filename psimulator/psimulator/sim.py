@@ -32,8 +32,12 @@ class Simulation:
         if 'output' not in self.metadata:
             raise RuntimeError('{}: missing required field "output"'.format(mdpath))
 
+        if 'geometry' not in self.metadata:
+            raise RuntimeError('{}: missing required field "geometry"'.format(mdpath))
+
         self.command = self.metadata['command']
         self.output = self.metadata['output'].split(',')[:2]
+        self.geometry = self.metadata['geometry']
 
         # verify output types
         for out in self.outputs():
