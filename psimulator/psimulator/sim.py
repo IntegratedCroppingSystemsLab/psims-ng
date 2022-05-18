@@ -4,7 +4,26 @@ from os import path
 import subprocess as sp
 
 class Simulation:
-    """Manages the lifecycle of a single simulation."""
+    """Manages the lifecycle of a single simulation. Each Simulation
+       corresponds to a directory containing a 'simulation.json' and all of the
+       files necessary to execute the simulation.
+
+       'simulation.json' must be of the following format:
+
+       {
+         "command": "<command-to-execute-simulation>",
+         "geometry": "<well-known-text geometry of simulation>",
+         "outputs": [
+            {
+              "path": "<relative-path-to-output-file>",
+              "type": "sqlite",
+              "target": "<table-to-merge-into>",
+            },
+            ...
+         ]
+       }
+
+       """
 
     def __init__(self, tld):
         """Initializes a simulation. Expects the path to the top-level
