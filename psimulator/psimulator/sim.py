@@ -17,7 +17,7 @@ class Simulation:
             {
               "path": "<relative-path-to-output-file>",
               "type": "sqlite",
-              "target": "<table-to-merge-into>",
+              "targets": ["<table1>", "<table2>", ...],
             },
             ...
          ]
@@ -55,19 +55,21 @@ class Simulation:
             raise RuntimeError('{}: missing required field "geometry"'.format(mdpath))
 
         self.command = self.metadata['command']
-        self.output = self.metadata['output'].split(',')[:2]
         self.geometry = self.metadata['geometry']
+        self.outputs = []
 
-        # verify output types
-        for out in self.outputs():
-            if len(out) != 2:
-                raise RuntimeError('invalid output {}: expected 2 fields, found {}'.format(out, len(out)))
+        for out in self.metadata['outputs']:
+            if 'path' not in out:
+                raise Exception('missing required field "path" in output')
 
-            if type(out[0]) is not str:
-                raise RuntimeError('invalid output {}: field 1 must be string'.format(out))
+            if 'targets' not in out:
+                raise Exception('missing required field "targets" in output')
 
-            if type(out[1]) is not str: 
-                raise RuntimeError('invalid output {}: field 2 must be string'.format(out))
+            nextout = lambda: None
+            nextout.path = out['path']
+            nextout.targets = out['targets']
+
+            self.outputs.append(nextout)
 
     def execute(self):
         """Executes this simulation. Returns true if the simulation succeeds,
@@ -91,17 +93,10 @@ class Simulation:
 
         # verify outputs were correctly generated 
         for of in self.outputs():
-            opath = path.join(self.tld, of[0])
+            opath = path.join(self.tld, of.path)
 
             if not path.exists(opath):
                 print('WARNING: simulation {} succeeded but output file {} was not generated'
                       .format(self.tld, opath))
 
         return True
-
-    def outputs(self):
-        """Returns a list of the simulation output files in relative format."""
-        if type(self.output[0]) is str:
-            return [self.output]
-
-        return self.output
