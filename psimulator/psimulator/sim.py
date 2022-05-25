@@ -13,7 +13,7 @@ class Simulation:
        {
          "command": "<command-to-execute-simulation>",
          "geometry": "<well-known-text geometry of simulation>",
-         "output": [
+         "outputs": [
             {
               "path": "<relative-path-to-output-file>",
               "type": "sqlite",
