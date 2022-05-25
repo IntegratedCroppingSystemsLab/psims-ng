@@ -13,7 +13,7 @@ class Simulation:
        {
          "command": "<command-to-execute-simulation>",
          "geometry": "<well-known-text geometry of simulation>",
-         "outputs": [
+         "output": [
             {
               "path": "<relative-path-to-output-file>",
               "type": "sqlite",
@@ -48,8 +48,8 @@ class Simulation:
         if 'command' not in self.metadata or type(self.metadata['command']) is not str:
             raise RuntimeError('{}: missing required field "command"'.format(mdpath))
 
-        if 'output' not in self.metadata:
-            raise RuntimeError('{}: missing required field "output"'.format(mdpath))
+        if 'outputs' not in self.metadata:
+            raise RuntimeError('{}: missing required field "outputs"'.format(mdpath))
 
         if 'geometry' not in self.metadata:
             raise RuntimeError('{}: missing required field "geometry"'.format(mdpath))
