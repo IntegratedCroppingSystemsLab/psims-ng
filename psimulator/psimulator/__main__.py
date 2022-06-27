@@ -1,12 +1,18 @@
 import json
 import io
-from mpi4py import MPI
 import os
-import sqlite3
 import subprocess as sp
 import sys
 import tarfile
 import tempfile
+
+# Check required non-core packages are available
+try:
+    from mpi4py import MPI
+    import sqlite3
+except ImportError as e:
+    print('Missing required Python library \"%s\"!' % e.name)
+    sys.exit(-1)
 
 from . import collection
 
